@@ -9,7 +9,7 @@ void Transpose(int arr[][COL], int result[][ROW])
     {
         for(int j = 0; j < COL; j++)
         {
-            result[i][j] = arr[j][i];
+            result[j][i] = arr[i][j];
         }
     }
 }
@@ -29,11 +29,11 @@ void Print(int result[][ROW])
 int main()
 {
     int arr[ROW][COL] = {
-        {1 , 2 , 3 , 4},
-        {4 , 5 , 6 , 7},
-        {7 , 8 , 9 , 0},
+        {1 , 2 , 3 , 1},
+        {4 , 5 , 6 , 2},
+        {7 , 8 , 9 , 3},
     };
-    int result[][ROW] = {0};
+    int result[COL][ROW] = {0};
     Transpose(arr,result);
     Print(result);
     return 0;
