@@ -1,28 +1,17 @@
 #include <stdio.h>
-#define m 10007
-
-int fun(int n)
-{
-    int s = 1;
-    for (int i = 0; i < n; i++)
-    {
-        s *= (i % m);
-    }
-    s = s % m;
-    return s;
-}
 
 int main()
 {
     int n;
     scanf("%d", &n);
-    int res = 0;
-    int b[25] = {0};
+    int s = 0;
+    int p = 1;
     for (int i = 1; i <= n; i++)
     {
-        b[i] = fun(i);
-        printf("%d\n",b[i]);
+        p = (p * (i % 10007)) % 10007;
+        s = s + (p % 10007);
     }
-    
+    s = s % 10007;
+    printf("%d\n", s);
     return 0;
 }

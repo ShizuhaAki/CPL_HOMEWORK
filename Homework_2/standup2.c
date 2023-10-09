@@ -8,15 +8,16 @@ int main()
     {
         scanf("%d", &a[i]);
     }
-    int num = 0;      // num表示引进的社牛数量
-    int count = a[0]; // count表示原班级内已经站起来的人数
+    int num = 0;
+    int sum = 0;
     for (int i = 0; i <= n; i++)
     {
-        if ((a[i] != 0) && (num + count < i))
+        if (sum < i)
         {
-            num += (i - count);
+            num += i - sum;
+            sum = i;
         }
-        count += a[i];
+        sum += a[i];
     }
     printf("%d\n", num);
     return 0;

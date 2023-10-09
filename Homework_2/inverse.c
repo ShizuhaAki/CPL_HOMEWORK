@@ -1,40 +1,29 @@
 #include <stdio.h>
 #include <string.h>
 
-void fun(char s[],int k)
-{
-    char copy[1000001];
-    strcpy(copy,s);
-    for(int i = 0; i < k; i++)
-    {
-        s[i] = copy[k-1-i];
-    }
-}
-
 int main()
 {
-    int n;
-    scanf("%d",&n);
-    char str[10000001];
-    for(int i = 0; i < n-1; i++)
+    long int n;
+    scanf("%ld", &n);
+    getchar();
+    char str[10000005] = {0};
+    for (int i = 0; i < n; i++)
     {
-        scanf("%c",&str[i]);
+        char ch = getchar();
+        str[i] = ch;
     }
-    int k;
-    scanf("%d",&k);
+    long int k;
+    scanf("%ld", &k);
 
-    char s1[10000001],s2[10000001];
-    for(int i = 0; i < k; i++)
+    char r[10000005] = {0};
+    for (int i = 0; i < k; i++)
     {
-        s1[i] = str[i];
+        r[i] = str[k - 1 - i];
     }
-    for(int i = k; i < n; i++)
+    for (int i = k; i < n; i++)
     {
-        s2[i-k] = str[i];
+        r[i] = str[n - 1 + k - i];
     }
-    fun(s1,k);
-    fun(s2,n-k);
-    strcat(s1,s2);
-    printf("%s",s1);
+    printf("%s\n", r);
     return 0;
 }
