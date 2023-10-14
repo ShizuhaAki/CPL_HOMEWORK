@@ -7,33 +7,24 @@ int main()
     for (int i = 0; i < T; i++)
     {
         int n;
-        long int a[50005] = {0};
+        int a[50005] = {0};
         scanf("%d", &n);
-        for (int j = 0; j < n; j++)
+        int max = 0;
+        for (int j = 0; j < n - 1; j++)
         {
             scanf("%d", &a[j]);
+            if (a[j] > max)
+                max = a[j];
         }
-        int max = 0;
-        for (int k = 0; k < n - 1; k++)
-        {
-            if (a[k] > max)
-                max = a[k];
-        }
+        scanf("%d", &a[n - 1]);
         if (max <= a[n - 1])
         {
-            s[i] = 0;
+            printf("Yes\n");
         }
         else
         {
-            s[i] = 1;
+            printf("No\n");
         }
-    }
-    for (int i = 0; i < T; i++)
-    {
-        if (s[i] == 0)
-            printf("YES\n");
-        else if (s[i] == 1)
-            printf("NO\n");
     }
     return 0;
 }
