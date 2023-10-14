@@ -31,41 +31,51 @@ void Inverse(char arr[], int len)
 void Change(char str[], char answer[])
 {
     int origin = atoi(str);
-    int o[25] = {0};
-    int count = 0;
-    while (origin != 0)
+    if (origin != 0)
     {
-        o[count] = origin % 3;
-        origin /= 3;
-        count++;
+        int o[25] = {0};
+        int count = 0;
+        while (origin != 0)
+        {
+            o[count] = origin % 3;
+            origin /= 3;
+            count++;
+        }
+        for (int j = 0; j < count; j++)
+        {
+            if (o[j] == 1)
+            {
+                answer[j] = '1';
+            }
+            else if (o[j] == 0)
+            {
+                answer[j] = '0';
+            }
+            else if (o[j] == 2)
+            {
+                answer[j] = 'Z';
+                o[j + 1] += 1;
+            }
+            else if (o[j] == 3)
+            {
+                answer[j] = '0';
+                o[j + 1] += 1;
+            }
+        }
+        if (o[count] != 0)
+        {
+            answer[count] = '1';
+            count += 1;
+        }
+        Inverse(answer, count);
+        for (int k = 0; k < count; k++)
+        {
+            printf("%c", answer[k]);
+        }
     }
-    for (int j = 0; j < count; j++)
+    else
     {
-        if (o[j] == 1)
-        {
-            answer[j] = '1';
-        }
-        else if (o[j] == 0)
-        {
-            answer[j] = '0';
-        }
-        else if (o[j] == 2)
-        {
-            answer[j] = 'Z';
-            o[j + 1] += 1;
-        }
-        else if (o[j] == 3)
-        {
-            answer[j] = '0';
-            o[j + 1] += 1;
-        }
-    }
-    if (o[count] != 0)
-        count += 1;
-    Inverse(answer, count);
-    for (int k = 0; k < count; k++)
-    {
-        printf("%c", answer[k]);
+        printf("0");
     }
     printf("\n");
 }
