@@ -1,2 +1,2 @@
 
-    if(o[count] != 0)
+    printf("%s",str);
