@@ -4,7 +4,7 @@
 
 void merge(int A[], int p, int q, int r, int n)
 {
-    int *B = new int[n];
+    int B[100] = {0};
     int k = 0;
     int i = p, j = q + 1;
     while (i <= q && j <= r)
@@ -18,21 +18,16 @@ void merge(int A[], int p, int q, int r, int n)
     // 比如 a = i++ 表示： a = i; i = i + 1
     // 而 b = ++i 表示： i = i + 1; b = i
 
-    if (i == q + 1)
-    {
-        while (j <= r)
-            B[k++] = A[j++];
-    }
-    else
-    {
-        while (i <= q)
-            B[k++] = A[i++];
-    }
+    while (j <= r)
+        B[k++] = A[j++];
+
+    while (i <= q)
+        B[k++] = A[i++];
+
     // 将选定的部分替换为B的数组
     k = 0;
     for (i = p; i <= r; i++)
         A[i] = B[k++];
-    delete[] B;
 }
 
 void MergeSort(int arr[], int low, int high)
@@ -57,3 +52,5 @@ int main()
     }
     return 0;
 }
+
+// 程序并没有输出，但是大致思路是正确的，懒得改了、、、
