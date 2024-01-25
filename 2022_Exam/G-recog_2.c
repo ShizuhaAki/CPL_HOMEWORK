@@ -1,15 +1,8 @@
-#include <stdbool.h>
 #include <stdio.h>
 #include <string.h>
-#define SIZE 101
-#define M 100
-#define N 50
 
-char picture[50][SIZE];
-bool check_col(int pos);
-int match(int up, int down, int left, int right);
-
-const char _0[17][9 + 1] = {
+char map[50][101];
+const char _0[17][9 + 1] = { // +1 for '\0'
     "..#####.",
     ".######.",
     "##....##",
@@ -27,6 +20,7 @@ const char _0[17][9 + 1] = {
     "##....##",
     ".######.",
     "..####.."};
+
 const char _1[17][9 + 1] = {
     "##",
     "##",
@@ -46,6 +40,7 @@ const char _1[17][9 + 1] = {
     "##",
     "##",
 };
+
 const char _2[17][9 + 1] = {
     "..#####..",
     ".#######.",
@@ -64,6 +59,7 @@ const char _2[17][9 + 1] = {
     "###......",
     "########.",
     "########."};
+
 const char _3[17][9 + 1] = {
     "########",
     "########",
@@ -82,6 +78,7 @@ const char _3[17][9 + 1] = {
     "###...##",
     ".######.",
     "..####.."};
+
 const char _4[17][9 + 1] = {
     ".....##..",
     "....###..",
@@ -100,6 +97,7 @@ const char _4[17][9 + 1] = {
     ".....##..",
     ".....##..",
     ".....##.."};
+
 const char _5[17][9 + 1] = {
     "########.",
     "########.",
@@ -118,6 +116,7 @@ const char _5[17][9 + 1] = {
     ".##...###",
     ".#######.",
     "..#####.."};
+
 const char _6[17][9 + 1] = {
     ".....#...",
     "....##...",
@@ -136,6 +135,7 @@ const char _6[17][9 + 1] = {
     "###...##.",
     ".#######.",
     "..####..."};
+
 const char _7[17][9 + 1] = {
     "#########",
     "#########",
@@ -155,6 +155,7 @@ const char _7[17][9 + 1] = {
     "...##....",
     "...##....",
 };
+
 const char _8[17][9 + 1] = {
     "..#####..",
     ".##...##.",
@@ -173,6 +174,7 @@ const char _8[17][9 + 1] = {
     "###..###.",
     ".######..",
     "...###..."};
+
 const char _9[17][9 + 1] = {
     ".######..",
     ".##..###.",
@@ -193,9 +195,9 @@ const char _9[17][9 + 1] = {
     "........."};
 
 struct Number {
-    const char (*p)[10]; // 数字字符 (注意这里的类型，因为每个字符是一个若干行、10 列的二维数组，这里与二维数组作函数参数时的用法一致)
-    int n;               // 数字字符所占的行数
-    int m;               // 数字字符所占的列数
+    const char (*p)[10];
+    int n;
+    int m;
 };
 
 struct Number numbers[] = {
@@ -211,109 +213,100 @@ struct Number numbers[] = {
     {_9, 17, 9},
 };
 
-int main()
+int up_to_down()
 {
-    int u = -1, l = -1;
-    for (int i = 0; i < N; i++) {
-        scanf("%s", picture[i]);
-    }
-    char str[SIZE] = {0};
-    for (int i = 0; i < SIZE - 1; i++) {
-        str[i] = '.';
-    }
-    printf("%s\n", str);
     for (int i = 0; i < 50; i++) {
-        if (strcmp(str, picture[i]) != 0) {
-            u = i;
-            break;
+        for (int j = 0; j < 100; j++) {
+            if (map[i][j] == '#')
+                return i;
         }
     }
-    for (int i = u + 1; i < 50; i++) {
-        if (strcmp(picture[i], str) == 0) {
-            l = i - 1;
-            break;
-        }
-    }
-    printf("%d %d\n", u, l);
-    int ansLen = 0, ans[6] = {0};
-    int left, right = M - 1;
-    // printf("%c %c %c\n", picture[35][96], picture[35][95], picture[35][94]);
-    // printf("%d %d\n", check_col(97), check_col(96));
-    // const char (*test)[10] = numbers[5].p;
-    // for (int i = 0; i < numbers[5].n; i++) {
-    //     for (int j = 0; j < numbers[5].m; j++) {
-    //         printf("%c", test[i][j]);
-    //     }
-    //     printf("\n");
-    // }
-    // for (int i = 0; i < numbers[5].n; i++) {
-    //     for (int j = 0; j < numbers[5].m; j++) {
-    //         printf("%c", picture[25 + i][88 + j]);
-    //     }
-    //     printf("\n");
-    // }
-    for (int cnt = 1; cnt <= 5; cnt++) {
-        while (check_col(right) == false) {
-            right--;
-        }
-        left = right - 1;
-        while (check_col(left) == true) {
-            left--;
-        }
-        left += 1;
-        // printf("left = %d, right = %d\n", left, right);
-        int temp = match(u, l, left, right);
-        // printf("temp = %d\n", temp);
-        if (temp != -1) {
-            ans[++ansLen] = temp;
-        }
-        right = left - 1;
-    }
-    for (int i = ansLen; i >= 1; i--) {
-        printf("%d ", ans[i]);
-    }
-    // printf("\n");
-    return 0;
 }
 
-bool check_col(int pos)
+int down_to_up()
 {
-    for (int i = 0; i < N; i++) {
-        if (picture[i][pos] == '#') {
-            // printf("picture[%d][%d]\n", pos, i);
-            return true;
+    for (int i = 49; i >= 0; i--) {
+        for (int j = 0; j < 100; j++) {
+            if (map[i][j] == '#')
+                return i;
         }
     }
-    return false;
 }
-// true: have '#'
 
-int match(int up, int down, int left, int right)
+int right_to_left(int start)
 {
-    // printf("%d %d %d %d \n", up, down, left, right);
-    for (int k = 0; k < 10; k++) {
-        // const char(*p)[10] = numbers[k].p;
-        int n = numbers[k].n, m = numbers[k].m;
-        if (down - up + 1 != n || right - left + 1 != m)
-            continue;
-        // printf("%d here\n", k);
-        bool flag = true;
-        for (int i = 0; i < n; i++) {
-            // flag = true;
-            for (int j = 0; j < m; j++) {
-                if ((numbers[k].p)[i][j] != picture[up + i][left + j]) {
-                    // printf("%d: p[%d][%d]\n", k, i, j);
-                    flag = false;
-                    break;
-                }
-            }
-            // printf("%d: %d\n", k, flag);
-            if (flag == false) {
+    for (int j = start; j >= 0; j--) {
+        for (int i = 0; i < 50; i++) {
+            if (map[i][j] == '#')
+                return j;
+        }
+    }
+}
+
+int left_to_right(int start)
+{
+    for (int j = start; j >= 0; j--) {
+        int flag = 1;
+        for (int i = 0; i < 50; i++) {
+            if (map[i][j] == '#') {
+                flag = 0;
                 break;
             }
         }
-        if (flag == true)
-            return k;
+        if (flag)
+            return j + 1;
+    }
+}
+
+int cmp(int u, int l, int r, int left)
+{
+    for (int i = 0; i < 10; i++) {
+        int n = numbers[i].n;
+        int m = numbers[i].m;
+        int flag = 1;
+        if (n != l - u + 1)
+            continue;
+        if (m != r - left + 1)
+            continue;
+        for (int j = 0; j < n; j++) {
+            int f = 0;
+            for (int k = 0; k < m; k++) {
+                if (map[u + j][left + k] != (numbers[i].p)[j][k]) {
+                    f = 1;
+                    break;
+                }
+            }
+            if (f) {
+                flag = 0;
+                break;
+            }
+        }
+        if (flag) {
+            return i;
+        }
     }
     return -1;
+}
+
+int main()
+{
+    for (int i = 0; i < 50; i++)
+        scanf("%s", map[i]);
+    int u = up_to_down();
+    int l = down_to_up();
+    printf("%d %d\n", u, l);
+    int t = 5, right = 99, left = 99;
+    int out[5] = {0};
+    while (t) {
+        t--;
+        right = right_to_left(left - 1);
+        left = left_to_right(right);
+        out[t] = cmp(u, l, right, left);
+    }
+    for (int i = 0; i < 5; i++) {
+        if (out[i] != -1)
+            printf("%d ", out[i]);
+    }
+    printf("\n");
+    return 0;
 }

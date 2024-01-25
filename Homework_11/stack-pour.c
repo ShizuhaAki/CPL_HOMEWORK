@@ -1,82 +1,94 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-typedef struct node {
-    int num[1000000];
-    int cnt;
-    struct node *next;
-} Node;
+typedef struct stacknode {
+    int val;
+    struct stacknode *next;
+} Stacknode;
 
-int n, m;
+typedef struct stack {
+    struct stack *top;
+} Stack;
 
-Node *Init();
-void operate(Node *head, int x, int y);
-void Print(Node *head);
+void push(Stack *stack, int val);
+void append(Stack *stack, Stacknode *node);
+Stacknode *popAll(Stack *stack);
+void printStack(Stack *stack);
+void freeStack(Stack *stack);
 
 int main()
 {
+    int n, m;
     scanf("%d%d", &n, &m);
-    Node *head = Init();
-    while (m--) {
-        int x, y;
-        scanf("%d%d", &x, &y);
-        operate(head, x, y);
+    Stack *stacks = malloc(sizeof(Stack) * n);
+    for (int i = 0; i < n; i++) {
+        stacks[i].top = NULL;
+        push(&stacks[i], i + 1);
     }
-    Print(head);
+    while (m--) {
+        int pre, lat;
+        scanf("%d%d", &pre, &lat);
+        pre -= 1;
+        lat -= 1;
+        // 由于栈的标号是从0开始的
+        Stacknode *node1 = popAll(&stacks[pre]);
+        append(&stacks[lat], node1);
+    }
+    for (int i = 0; i < n; i++) {
+        printStack(&stacks[i]);
+        freeStack(&stacks[i]);
+    }
+    free(stacks);
     return 0;
 }
 
-Node *Init()
+void push(Stack *stack, int val)
 {
-    if (n <= 0) {
-        return NULL;
+    Stacknode *newnode = malloc(sizeof(Stacknode));
+    newnode->val = val;
+    newnode->next = stack->top;
+    stack->top = newnode;
+}
+
+void append(Stack *stack, Stacknode *node)
+{
+    if (stack->top == NULL) {
+        stack->top = node;
+    } else {
+        Stacknode *cur = stack->top;
+        while (cur->next != NULL) {
+            cur = cur->next;
+        }
+        cur->next = node;
     }
-    Node *head = malloc(sizeof(Node));
-    head->cnt = 1;
-    head->num[0] = 1;
-    head->next = NULL;
-    Node *cur = head;
-    for (int i = 2; i <= n; i++) {
-        Node *p = malloc(sizeof(Node));
-        p->cnt = 1;
-        p->next = NULL;
-        p->num[0] = i;
-        cur->next = p;
+}
+
+Stacknode *popAll(Stack *stack)
+{
+    Stacknode *temp = stack->top;
+    stack->top = NULL;
+    return temp;
+}
+
+void printStack(Stack *stack)
+{
+    if (stack->top == NULL) {
+        printf("0\n");
+    }
+    Stacknode *cur = stack->top;
+    while (cur) {
+        printf("%d ", cur->val);
         cur = cur->next;
     }
-    return head;
+    printf("\n");
 }
 
-void Print(Node *head)
+void freeStack(Stack *stack)
 {
-    while (head != NULL) {
-        if (head->cnt == 0) {
-            printf("0\n");
-        } else {
-            for (int k = 0; k < head->cnt; k++) {
-                printf("%d ", head->num[k]);
-            }
-            printf("\n");
-        }
-        head = head->next;
+    Stacknode *cur = stack->top;
+    while (cur) {
+        Stacknode *p = cur;
+        cur = cur->next;
+        free(p);
     }
-}
-
-void operate(Node *head, int x, int y)
-{
-    Node *px = head, *py = head;
-    while (x > 1) {
-        x--;
-        px = px->next;
-    }
-    while (y > 1) {
-        y--;
-        py = py->next;
-    }
-    for (int i = 0; i < px->cnt; i++) {
-        py->num[i + py->cnt] = px->num[px->cnt - i - 1];
-        px->num[px->cnt - i - 1] = 0;
-    }
-    py->cnt += px->cnt;
-    px->cnt = 0;
 }
